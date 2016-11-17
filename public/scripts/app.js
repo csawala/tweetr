@@ -92,13 +92,15 @@ function loadTweets() {       // ========== FETCH TWEETS FROM /tweets/
 }
 
 function composeToggle() {        // ========== TOGGLE COMPOSE/NEW TWEET SECTION
-  $('.container .new-tweet').slideToggle('fast', function(){
-    $('.new-tweet textarea').focus()
+  $('#compose-box').on('click', function() {
+    $('.container .new-tweet').slideToggle('fast', function(){
+      $('.new-tweet textarea').focus()
+    })
   })
 }
 
 $(document).ready(function() {
   loadTweets()    //  LOAD TWEETS FROM DB & ONCE LOADED RENDER THEM TO PAGE
   submitTweetInput()
-  $('#compose-box').on('click', composeToggle)
+  composeToggle()
 })
