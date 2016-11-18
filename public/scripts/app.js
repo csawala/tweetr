@@ -12,8 +12,8 @@ function submitTweetInput() {     // =========== SUBMIT TWEET FORM
     } else {
       $.ajax('/tweets/', {
         method: 'POST',
-        data: { text },     // text.text can be referred like this
-      }).then((res) => {  // post submitted text info
+        data: { text },     // text.text can be referred like this apparently
+      }).then((res) => {  // post submitted text info and reset/clear conditional data
         $('textarea').val('')
         $('.notice').html('')
         $('.counter').html('140')
@@ -38,7 +38,11 @@ function createTweetElement(data) {       // =============== TAKE DATA AND HTMLI
   const inName = toText(data.user.name)
   const inHandle = toText(data.user.handle)
   const inContent = toText(data.content.text)
-  const inTime = toText(data.created_at)
+  // Date & Time Capture & Conversion
+  const fullTime = new Date(data.created_at)      // Convert "created_at" to a date field
+  const inDate = fullTime.toDateString()          // Capture DDD MMM YYYY
+  const inTime = fullTime.toLocaleTimeString()    // Capture HH:MM:SS AM/PM
+
   // full tweet w/ necessary HTML formatting
   let output =
     `<article>
@@ -49,7 +53,7 @@ function createTweetElement(data) {       // =============== TAKE DATA AND HTMLI
       </header>
       <p class="content">${inContent}</p>
       <footer>
-        ${inTime}
+        ${inDate} @ ${inTime}
         <span class="reactions">
           <i class="fa fa-flag"></i>
           <i class="fa fa-retweet"></i>
@@ -82,12 +86,10 @@ function sortTweets(data) {     // =========== SORT TWEETS BY created_at FIELD
   return history
 }
 
-function loadTweets() {       // ========== FETCH TWEETS FROM /tweets/
+function loadTweets() {       // ========== FETCH TWEETS FROM DB
   $.getJSON('/tweets/', function(data) {
     $(".old-tweet").empty();  // CLEAR MAIN PAGE BEFORE REWRITING
     renderTweets(data)
-  }).fail(() => {     // NEED AN ERROR CATCH?
-    console.log("fail")
   })
 }
 
